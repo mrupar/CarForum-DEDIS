@@ -1,0 +1,26 @@
+Simple Forum App
+
+Laravel/PHP
+	- built in user management
+	- it creates sqlite db
+
+DB:
+- Users
+	- username (char)
+	- password (char)
+- ForumCategory:
+	- name (char)
+	- description (text)
+	- date (date)
+	- created_by (FK users)
+- ForumSubCategory:
+	- name (char)
+	- description (text)
+	- date (date)
+	- created_by (FK users)
+	- category (FK category)
+- ForumReply:
+	- reply (text)
+	- date (date)
+	- created_by (FK users)
+	- subcategory (FK subCategory)
