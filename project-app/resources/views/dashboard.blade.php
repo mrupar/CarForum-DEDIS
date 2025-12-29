@@ -12,9 +12,13 @@
 <div class="row">
     @forelse($categories as $category)
         <div class="col-md-4 mb-3">
-            <div class="card">
+            <div class="card h-100">
                 <div class="card-body">
-                    <h5 class="card-title">{{ $category->title }}</h5>
+                    <h5 class="card-title">
+                        <a href="{{ route('categories.show', $category) }}">
+                            {{ $category->title }}
+                        </a>
+                    </h5>
                     <p class="card-text">{{ $category->content }}</p>
                 </div>
                 <div class="card-footer text-muted">
