@@ -1,44 +1,29 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
+@extends('layouts.app')
 
-<body>
+@section('content')
+<h3 class="mb-4">Forum Categories</h3>
 
-    <nav class="navbar navbar-light navbar-expand-lg mb-5" style="background-color: #e3f2fd;">
-        <div class="container">
-            <a class="navbar-brand mr-auto" href="#">Car Forum</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    @guest
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('login') }}">Login</a>
-                    </li>
-                    @else
-                    <li class="nav-item">
-                        <a class="nav-link">Hello, {{ Auth::user()->name }}</a>
-                    </li>
-                    @endguest
-                </ul>
+@auth
+<div class="mb-3">
+    <a href="{{ route('categories.create') }}" class="btn btn-success">+ Create New Category</a>
+</div>
+@endauth
 
-                <ul class="navbar-nav ms-auto">
-                    @auth
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('signout') }}">Logout</a>
-                    </li>
-                    @endauth
-                </ul>
+<div class="row">
+    @forelse($categories as $category)
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ $category->title }}</h5>
+                    <p class="card-text">{{ $category->content }}</p>
+                </div>
+                <div class="card-footer text-muted">
+                    Threads: {{ $category->threads_count }}
+                </div>
             </div>
         </div>
-    </nav>
-
-
-</body>
-
-</html>
+    @empty
+        <p>No categories found.</p>
+    @endforelse
+</div>
+@endsection

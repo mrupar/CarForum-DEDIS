@@ -1,29 +1,33 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-use Laravel\Fortify\Features;
-use App\Http\Controllers\Auth\Register;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CustomAuthController;
+use App\Http\Controllers\ForumCategoryController;
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])
+         ->name('dashboard');
+});
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
+Route::middleware(['auth'])->group(function () {
+
+    // CREATE category (static) — must come first
+    Route::get('/categories/create', [ForumCategoryController::class, 'create'])
+        ->name('categories.create');
+
+    Route::post('/categories', [ForumCategoryController::class, 'store'])
+        ->name('categories.store');
+
+    // SHOW category (dynamic) — comes last
+    Route::get('/categories/{category}', [ForumCategoryController::class, 'show'])
+         ->name('categories.show');
+
 });
 
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-*/
-Route::get('/', [CustomAuthController::class, 'dashboard']); 
-Route::get('login', [CustomAuthController::class, 'index'])->name('login');
-Route::post('custom-login', [CustomAuthController::class, 'customLogin'])->name('login.custom'); 
-Route::get('registration', [CustomAuthController::class, 'registration'])->name('register-user');
-Route::post('custom-registration', [CustomAuthController::class, 'customRegistration'])->name('register.custom'); 
-Route::get('signout', [CustomAuthController::class, 'signOut'])->name('signout');
 
-require __DIR__.'/settings.php';
+Route::get('login', [CustomAuthController::class, 'index'])->name('login');
+Route::post('custom-login', [CustomAuthController::class, 'customLogin'])->name('login.custom');
+Route::get('registration', [CustomAuthController::class, 'registration'])->name('register-user');
+Route::post('custom-registration', [CustomAuthController::class, 'customRegistration'])->name('register.custom');
+Route::get('signout', [CustomAuthController::class, 'signOut'])->name('signout');
