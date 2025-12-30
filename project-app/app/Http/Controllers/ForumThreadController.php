@@ -26,6 +26,27 @@ class ForumThreadController extends BaseForumController
         return view('threads.show', compact('thread'));
     }
 
+    public function edit(ForumThread $thread)
+    {
+        return view('threads.edit', compact('thread'));
+    }
+
+    /* =========================================================
+     | TEMPLATE METHODS USAGE
+     |=========================================================*/
+
+    // Update thread
+    public function updateThread(Request $request, ForumThread $thread)
+    {
+        return $this->update($request, $thread);
+    }
+
+    // Delete thread
+    public function destroyThread(ForumThread $thread)
+    {
+        return $this->destroy($thread);
+    }
+
     /* =========================================================
      | TEMPLATE HOOK IMPLEMENTATION
      |=========================================================*/
@@ -41,7 +62,6 @@ class ForumThreadController extends BaseForumController
     protected function createModel(array $data, ...$context): Model
     {
         /** @var ForumCategory $category */
-        print_r($context);
         $category = $context[0] ?? request()->route('category');
 
         if (!$category instanceof ForumCategory) {
@@ -59,7 +79,8 @@ class ForumThreadController extends BaseForumController
 
     protected function authorizeAction(string $ability, ?Model $model = null): void
     {
-        // Disabled for now to avoid 403
+        // Example: use policies here
+        // $this->authorize($ability, $model ?? ForumThread::class);
     }
 
     protected function redirectAfterStore(Model $model)
@@ -71,11 +92,23 @@ class ForumThreadController extends BaseForumController
 
     protected function redirectAfterUpdate(Model $model)
     {
-        return redirect()->route('threads.show', $model);
+        return redirect()->route('threads.show', $model)
+            ->with('success', 'Thread updated successfully.');
     }
 
     protected function redirectAfterDelete()
     {
-        return redirect()->route('dashboard');
+        return redirect()->route('dashboard')
+            ->with('success', 'Thread deleted successfully.');
+    }
+
+    /* =========================================================
+     | OPTIONAL HOOKS
+     |=========================================================*/
+
+    protected function afterDelete(Model $model): void
+    {
+        // Example: Delete all posts in this thread before deleting the thread
+        $model->posts()->delete();
     }
 }

@@ -14,29 +14,21 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->group(function () {
 
     // Categories
-    Route::get('/categories/create', [ForumCategoryController::class, 'create'])
-        ->name('categories.create');
-
-    Route::post('/categories', [ForumCategoryController::class, 'store'])
-        ->name('categories.store');
-
-    Route::get('/categories/{category}', [ForumCategoryController::class, 'show'])
-         ->name('categories.show');
-
-
+    Route::get('/categories/create', [ForumCategoryController::class, 'create'])->name('categories.create');
+    Route::post('/categories', [ForumCategoryController::class, 'store'])->name('categories.store');
+    Route::get('/categories/{category}', [ForumCategoryController::class, 'show'])->name('categories.show');
+    Route::get('{category}/edit', [ForumCategoryController::class, 'edit'])->name('categories.edit');
+    Route::put('{category}', [ForumCategoryController::class, 'updateCategory'])->name('categories.update');
+    Route::delete('{category}', [ForumCategoryController::class, 'destroyCategory'])->name('categories.destroy');
     // Threads
-    Route::get('/categories/{category}/threads/create', [ForumThreadController::class, 'create'])
-        ->name('threads.create');
-
-    Route::post('/categories/{category}/threads', [ForumThreadController::class, 'store'])
-        ->name('threads.store');
-
-    Route::get('/threads/{thread}', [ForumThreadController::class, 'show'])
-        ->name('threads.show');
-
+    Route::get('/categories/{category}/threads/create', [ForumThreadController::class, 'create'])->name('threads.create');
+    Route::post('/categories/{category}/threads', [ForumThreadController::class, 'store'])->name('threads.store');
+    Route::get('/threads/{thread}', [ForumThreadController::class, 'show'])->name('threads.show');
+    Route::get('{thread}/edit', [ForumThreadController::class, 'edit'])->name('threads.edit');
+    Route::put('threads/{thread}', [ForumThreadController::class, 'updateThread'])->name('threads.update');
+    Route::delete('threads/{thread}', [ForumThreadController::class, 'destroyThread'])->name('threads.destroy');
     // Posts
-    Route::post('/threads/{thread}/posts', [ForumPostController::class, 'store'])
-        ->name('posts.store');
+    Route::post('/threads/{thread}/posts', [ForumPostController::class, 'store'])->name('posts.store');
 });
 
 // Authentication routes

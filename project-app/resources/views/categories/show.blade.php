@@ -2,7 +2,22 @@
 
 @section('content')
 <div class="container">
-    <h3>Category: {{ $category->title }}</h3>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Category: {{ $category->title }}</h3>
+
+        @auth
+        <div>
+            <a href="{{ route('categories.edit', $category) }}" class="btn btn-warning">Edit</a>
+
+            <form method="POST" action="{{ route('categories.destroy', $category) }}" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this category?');">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </div>
+        @endauth
+    </div>
+
     <p>{{ $category->content }}</p>
 
     <h5 class="mt-4">Threads</h5>
@@ -25,6 +40,5 @@
             <p>No threads in this category yet.</p>
         @endforelse
     </div>
-
 </div>
 @endsection

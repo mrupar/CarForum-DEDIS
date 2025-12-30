@@ -32,6 +32,16 @@ class ForumCategoryController extends BaseForumController
         return view('categories.edit', compact('category'));
     }
 
+    public function updateCategory(Request $request, ForumCategory $category)
+    {
+        return $this->update($request, $category);
+    }
+
+    public function destroyCategory(ForumCategory $category)
+    {
+        return $this->destroy($category);
+    }
+
     /* =========================
      | TEMPLATE HOOKS
      |=========================*/
