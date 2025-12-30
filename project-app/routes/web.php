@@ -23,6 +23,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/categories/{category}', [ForumCategoryController::class, 'show'])
          ->name('categories.show');
 
+
     // Threads
     Route::get('/categories/{category}/threads/create', [ForumThreadController::class, 'create'])
         ->name('threads.create');

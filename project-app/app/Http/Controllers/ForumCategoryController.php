@@ -2,43 +2,73 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Forum\BaseForumController;
 use App\Models\ForumCategory;
+use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Gate;
 
-class ForumCategoryController extends Controller
+class ForumCategoryController extends BaseForumController
 {
-    public function show(ForumCategory $category)
-    {
-        // Load threads with authors and post count
-        $threads = $category->threads()
-            ->with('author')
-            ->withCount('posts')
-            ->orderByDesc('date_created')
-            ->get();
-
-        return view('categories.show', compact('category', 'threads'));
-    }
 
     public function create()
     {
         return view('categories.create');
     }
-    
-    public function store(Request $request)
+
+    public function show(ForumCategory $category)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
+        $threads = $category->threads()
+            ->with('author')
+            ->withCount('posts')
+            ->latest()
+            ->get();
+
+        return view('categories.show', compact('category', 'threads'));
+    }
+
+    public function edit(ForumCategory $category)
+    {
+        return view('categories.edit', compact('category'));
+    }
+
+    /* =========================
+     | TEMPLATE HOOKS
+     |=========================*/
+
+    protected function validateRequest(Request $request): array
+    {
+        return $request->validate([
+            'title'   => 'required|string|max:255',
             'content' => 'nullable|string',
         ]);
-    
-        \App\Models\ForumCategory::create([
-            'title' => $request->title,
-            'content' => $request->content,
+    }
+
+    protected function createModel(array $data, $context = null): Model
+    {
+        return ForumCategory::create([
+            ...$data,
             'date_created' => now(),
         ]);
-    
-        return redirect()->route('dashboard')
-            ->with('success', 'Category created successfully.');
     }
-    
+    protected function authorizeAction(string $ability, ?Model $model = null): void
+    {
+        // Policy-ready
+        // $this->authorize($ability, $model ?? ForumCategory::class);
+    }
+
+    protected function redirectAfterStore(Model $model)
+    {
+        return redirect()->route('categories.show', $model);
+    }
+
+    protected function redirectAfterUpdate(Model $model)
+    {
+        return redirect()->route('categories.show', $model);
+    }
+
+    protected function redirectAfterDelete()
+    {
+        return redirect()->route('dashboard');
+    }
 }

@@ -6,16 +6,16 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 use App\Http\Controllers\Controller;
 
-abstract class AbstractCrudController extends Controller
+abstract class BaseForumController extends Controller
 {
     /** Template method */
-    public function store(Request $request)
+    public function store(Request $request, $context = null)
     {
         $this->authorizeAction('create');
 
         $validated = $this->validateRequest($request);
 
-        $model = $this->createModel($validated);
+        $model = $this->createModel($validated, $context);
 
         $this->afterCreate($model);
 
@@ -51,7 +51,7 @@ abstract class AbstractCrudController extends Controller
 
     abstract protected function validateRequest(Request $request): array;
 
-    abstract protected function createModel(array $data): Model;
+    abstract protected function createModel(array $data, $context = null): Model;
 
     abstract protected function authorizeAction(string $ability, ?Model $model = null): void;
 
