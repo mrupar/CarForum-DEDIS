@@ -3,13 +3,13 @@ FROM php:8.3-cli
 # Install system dependencies, Node.js 20, and other tools
 RUN apt-get update \
 	&& apt-get install -y --no-install-recommends \
-	   ca-certificates curl gnupg lsb-release build-essential git unzip zip zlib1g-dev libzip-dev libpq-dev \
+	   ca-certificates curl gnupg lsb-release build-essential git unzip zip zlib1g-dev libzip-dev default-mysql-client default-libmysqlclient-dev \
 	&& curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
 	&& apt-get install -y nodejs \
 	&& rm -rf /var/lib/apt/lists/*
 
-# Install PDO PostgreSQL extension
-RUN docker-php-ext-install pdo pdo_pgsql || true
+# Install PDO MySQL extension
+RUN docker-php-ext-install pdo pdo_mysql || true
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
