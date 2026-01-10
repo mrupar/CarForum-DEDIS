@@ -21,7 +21,6 @@ class ForumCategoryController extends BaseForumController
         $threads = $category->threads()
             ->with('author')
             ->withCount('posts')
-            ->latest()
             ->get();
 
         return view('categories.show', compact('category', 'threads'));
