@@ -17,8 +17,6 @@ abstract class BaseForumController extends Controller
 
         $model = $this->createModel($validated, $context);
 
-        $this->afterCreate($model);
-
         return $this->redirectAfterStore($model);
     }
 
@@ -31,8 +29,6 @@ abstract class BaseForumController extends Controller
 
         $model->update($validated);
 
-        $this->afterUpdate($model);
-
         return $this->redirectAfterUpdate($model);
     }
 
@@ -41,8 +37,6 @@ abstract class BaseForumController extends Controller
         $this->authorizeAction('delete', $model);
 
         $model->delete();
-
-        $this->afterDelete($model);
 
         return $this->redirectAfterDelete();
     }
@@ -54,12 +48,6 @@ abstract class BaseForumController extends Controller
     abstract protected function createModel(array $data, $context = null): Model;
 
     abstract protected function authorizeAction(string $ability, ?Model $model = null): void;
-
-    /* ===== Optional Hooks ===== */
-
-    protected function afterCreate(Model $model): void {}
-    protected function afterUpdate(Model $model): void {}
-    protected function afterDelete(Model $model): void {}
 
     abstract protected function redirectAfterStore(Model $model);
     abstract protected function redirectAfterUpdate(Model $model);
